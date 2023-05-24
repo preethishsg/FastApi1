@@ -15,11 +15,18 @@ class Person (BaseModel):
     gender: str 
   
 with open('people.json', 'r') as f:
-    people = json.load(f)
+    people = json.load(f)['people']
 
 @app.get('/person/{p_id}', status_code=200)
 def get_person(p_id: int):
-    person = [p for p in people if p['id'] == p_id]
+    person = []
+    print(people)
+    for p in people:
+        print('Here')
+        print(p)
+    
+        if p['id'] == p_id:
+            person.append(p)
     if len(person) > 0 :
         return person[0]
     else :
@@ -50,12 +57,12 @@ def add_person (person: Person):
         "id": p_id,
         "name": person.name,
         "age": person.age,
-        "gender": person. gender
+        "gender": person.gender
     }
 
     people.append(new_person)
     with open('people.json', 'w') as f:
-        json.dump (people, f)
+        json.dump({'people': people}, f, indent=4)
     return new_person
 
 @app.put('/changePerson', status_code=204)
